@@ -1,161 +1,159 @@
-# 📊 MongoDB vs HBase: A Comprehensive Comparison
-![Database Banner](https://via.placeholder.com/800x200.png?text=MongoDB+vs+HBase)
+# 📊 MongoDB vs HBase: Una Comparación Exhaustiva
+![Banner de Bases de Datos](https://via.placeholder.com/800x200.png?text=MongoDB+vs+HBase)
 
-## 📑 Table of Contents
-- [Introduction](#introduction)
-- [MongoDB Overview](#mongodb-overview)
-  - [Key Features](#mongodb-key-features)
-  - [Architecture](#mongodb-architecture)
-  - [Use Cases](#mongodb-use-cases)
-- [HBase Overview](#hbase-overview)
-  - [Key Features](#hbase-key-features)
-  - [Architecture](#hbase-architecture)
-  - [Use Cases](#hbase-use-cases)
-- [Comparison](#comparison)
-- [When to Choose Which?](#when-to-choose-which)
-- [Quick Reference](#quick-reference)
+## 📑 Tabla de Contenidos
+- [Introducción](#introduccion)
+- [Descripción General de MongoDB](#descripcion-general-de-mongodb)
+  - [Características Principales](#caracteristicas-principales-mongodb)
+  - [Arquitectura](#arquitectura-mongodb)
+  - [Casos de Uso](#casos-de-uso-mongodb)
+- [Descripción General de HBase](#descripcion-general-de-hbase)
+  - [Características Principales](#caracteristicas-principales-hbase)
+  - [Arquitectura](#arquitectura-hbase)
+  - [Casos de Uso](#casos-de-uso-hbase)
+- [Comparación](#comparacion)
+- [¿Cuándo Elegir Cuál?](#cuando-elegir-cual)
+- [Referencia Rápida](#referencia-rapida)
 
-## Introduction
+## Introducción
 
-In the world of NoSQL databases, MongoDB and HBase stand as two powerful solutions for handling large-scale data. This guide provides a comprehensive comparison to help you understand their strengths and use cases.
+En el mundo de las bases de datos NoSQL, MongoDB y HBase se destacan como dos soluciones potentes para manejar datos a gran escala. Esta guía proporciona una comparación exhaustiva para ayudarte a entender sus fortalezas y casos de uso.
 
-## MongoDB Overview
-![MongoDB Logo](https://via.placeholder.com/400x100.png?text=MongoDB+Logo)
+## Descripción General de MongoDB
+![Logo de MongoDB](https://via.placeholder.com/400x100.png?text=MongoDB+Logo)
 
-MongoDB is a document-oriented NoSQL database that stores data in flexible, JSON-like documents.
+MongoDB es una base de datos NoSQL orientada a documentos que almacena datos en documentos flexibles similares a JSON.
 
-### MongoDB Key Features
+### Características Principales de MongoDB
 
-- 📝 Document-oriented storage
-- 🔄 Dynamic schema
-- 🔍 Rich query language
-- 📊 Aggregation framework
-- 📈 Horizontal scaling through sharding
-- 🔒 Built-in security features
+- 📝 Almacenamiento orientado a documentos
+- 🔄 Esquema dinámico
+- 🔍 Lenguaje de consulta rico
+- 📊 Framework de agregación
+- 📈 Escalado horizontal mediante fragmentación
+- 🔒 Características de seguridad incorporadas
 
-### MongoDB Architecture
+### Arquitectura de MongoDB
 
 ```mermaid
 graph TD
-    A[Client Applications] --> B[MongoDB Router mongos]
-    B --> C[Config Servers]
-    B --> D[Shard 1]
-    B --> E[Shard 2]
-    B --> F[Shard 3]
-    D --> G[Replica Set]
-    E --> H[Replica Set]
-    F --> I[Replica Set]
+    A[Aplicaciones Cliente] --> B[Router MongoDB mongos]
+    B --> C[Servidores de Configuración]
+    B --> D[Fragmento 1]
+    B --> E[Fragmento 2]
+    B --> F[Fragmento 3]
+    D --> G[Conjunto de Réplicas]
+    E --> H[Conjunto de Réplicas]
+    F --> I[Conjunto de Réplicas]
 ```
 
-### MongoDB Use Cases
+### Casos de Uso de MongoDB
 
-- 📱 Mobile applications
-- 🌐 Content management systems
-- 📊 Real-time analytics
-- 🎮 Gaming applications
-- 🛒 E-commerce platforms
+- 📱 Aplicaciones móviles
+- 🌐 Sistemas de gestión de contenido
+- 📊 Análisis en tiempo real
+- 🎮 Aplicaciones de juegos
+- 🛒 Plataformas de comercio electrónico
 
-## HBase Overview
-![HBase Logo](https://via.placeholder.com/400x100.png?text=HBase+Logo)
+## Descripción General de HBase
+![Logo de HBase](https://via.placeholder.com/400x100.png?text=HBase+Logo)
 
-HBase is a distributed, scalable, big data store built on top of HDFS (Hadoop Distributed File System).
+HBase es un almacén de datos distribuido y escalable construido sobre HDFS (Sistema de Archivos Distribuido de Hadoop).
 
-### HBase Key Features
+### Características Principales de HBase
 
-- 📊 Column-oriented storage
-- ⚡ Real-time read/write access
-- 🔄 Automatic sharding
-- 💾 Compression support
-- 🔍 Consistent reads and writes
-- 📈 Linear and modular scaling
+- 📊 Almacenamiento orientado a columnas
+- ⚡ Acceso de lectura/escritura en tiempo real
+- 🔄 Fragmentación automática
+- 💾 Soporte de compresión
+- 🔍 Lecturas y escrituras consistentes
+- 📈 Escalado lineal y modular
 
-### HBase Architecture
+### Arquitectura de HBase
 
 ```mermaid
 graph TD
-    A[Client] --> B[ZooKeeper]
+    A[Cliente] --> B[ZooKeeper]
     B --> C[HMaster]
-    B --> D[RegionServer 1]
-    B --> E[RegionServer 2]
-    B --> F[RegionServer 3]
+    B --> D[Servidor de Región 1]
+    B --> E[Servidor de Región 2]
+    B --> F[Servidor de Región 3]
     C --> G[HDFS]
     D --> G
     E --> G
     F --> G
 ```
 
-### HBase Use Cases
+### Casos de Uso de HBase
 
-- 📊 Big data analytics
-- 📈 Time-series data
-- 🌐 Large-scale data processing
-- 📱 Message platforms
-- 🔍 Search engines
+- 📊 Análisis de big data
+- 📈 Datos de series temporales
+- 🌐 Procesamiento de datos a gran escala
+- 📱 Plataformas de mensajería
+- 🔍 Motores de búsqueda
 
-## Comparison
+## Comparación
 
-| Feature | MongoDB | HBase |
-|---------|---------|-------|
-| Data Model | Document-oriented | Wide-column store |
-| Query Language | Rich query language | Get/Put/Scan |
-| Scaling | Horizontal (Sharding) | Horizontal (Auto-sharding) |
-| Consistency | Configurable | Strong |
-| Use Case | General purpose | Big data/Analytics |
-| Performance | High (CRUD) | High (Large datasets) |
-| Learning Curve | Moderate | Steep |
+| Característica | MongoDB | HBase |
+|----------------|---------|-------|
+| Modelo de Datos | Orientado a documentos | Almacén de columnas anchas |
+| Lenguaje de Consulta | Lenguaje de consulta rico | Get/Put/Scan |
+| Escalado | Horizontal (Fragmentación) | Horizontal (Auto-fragmentación) |
+| Consistencia | Configurable | Fuerte |
+| Caso de Uso | Propósito general | Big data/Análisis |
+| Rendimiento | Alto (CRUD) | Alto (Grandes conjuntos de datos) |
+| Curva de Aprendizaje | Moderada | Pronunciada |
 
-## When to Choose Which?
+## ¿Cuándo Elegir Cuál?
 
-### Choose MongoDB when:
-- 🎯 You need flexible schema
-- 📝 Your data is document-oriented
-- 🚀 You want faster development
-- 📊 You need rich querying capabilities
-- 🔄 Your data structure changes frequently
+### Elige MongoDB cuando:
+- 🎯 Necesites un esquema flexible
+- 📝 Tus datos estén orientados a documentos
+- 🚀 Quieras un desarrollo más rápido
+- 📊 Necesites capacidades de consulta ricas
+- 🔄 Tu estructura de datos cambie frecuentemente
 
-### Choose HBase when:
-- 📈 You have massive datasets
-- ⚡ You need real-time access to Big Data
-- 📊 You're working with time-series data
-- 🔍 You need strong consistency
-- 💾 You're already using Hadoop ecosystem
+### Elige HBase cuando:
+- 📈 Tengas conjuntos de datos masivos
+- ⚡ Necesites acceso en tiempo real a Big Data
+- 📊 Trabajes con datos de series temporales
+- 🔍 Necesites una fuerte consistencia
+- 💾 Ya estés usando el ecosistema Hadoop
 
-## Quick Reference
+## Referencia Rápida
 
 ```javascript
-// MongoDB Example
+// Ejemplo de MongoDB
 db.collection.insertOne({
-    name: "Product",
-    price: 99.99,
-    details: {
-        color: "blue",
-        size: "medium"
+    nombre: "Producto",
+    precio: 99.99,
+    detalles: {
+        color: "azul",
+        tamaño: "mediano"
     }
 })
 ```
 
 ```java
-// HBase Example
-Put put = new Put(Bytes.toBytes("row1"));
+// Ejemplo de HBase
+Put put = new Put(Bytes.toBytes("fila1"));
 put.addColumn(
     Bytes.toBytes("cf"),
-    Bytes.toBytes("name"),
-    Bytes.toBytes("Product")
+    Bytes.toBytes("nombre"),
+    Bytes.toBytes("Producto")
 );
 table.put(put);
 ```
 
 ---
 
-## 📚 Additional Resources
+## 📚 Recursos Adicionales
 
-- [MongoDB Documentation](https://docs.mongodb.com/)
-- [HBase Documentation](https://hbase.apache.org/book.html)
-- [NoSQL Database Comparison](https://db-engines.com/en/comparison)
+- [Documentación de MongoDB](https://docs.mongodb.com/)
+- [Documentación de HBase](https://hbase.apache.org/book.html)
+- [Comparación de Bases de Datos NoSQL](https://db-engines.com/en/comparison)
 
 ---
 
-*This documentation is maintained by [Your Name]*
-*Last updated: [Current Date]*
 
-> 💡 **Note**: This is a living document. Feel free to contribute and improve it!
+> 💡 **Nota**: Este es un documento vivo. ¡Siéntete libre de contribuir y mejorarlo!
