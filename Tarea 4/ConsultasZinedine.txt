@@ -1,0 +1,124 @@
+import happybase
+import pandas as pd
+from datetime import datetime
+
+try:
+    # 1. Establecer conexión con HBase
+    connection = happybase.Connection('localhost')
+    print("Conexión establecida con HBase")
+
+    # 2. Crear la tabla con las familias de columnas
+    table_name = 'accidentes_transito'
+    families = {
+        'ubicacion': dict(),    # Información geográfica
+        'vehiculos': dict(),    # Detalles de vehículos involucrados
+        'personas': dict(),     # Información sobre personas involucradas
+        'detalles': dict()      # Información del accidente
+    }
+
+    # Eliminar la tabla si ya existe
+    if table_name.encode() in connection.tables():
+        print(f"Eliminando tabla existente - {table_name}")
+        connection.delete_table(table_name, disable=True)
+
+    # Crear nueva tabla
+    connection.create_table(table_name, families)
+    table = connection.table(table_name)
+    print("Tabla 'accidentes_transito' creada exitosamente")
+
+    # 3. Cargar datos del CSV con la codificación correcta
+    accidentes_data = pd.read_csv('accidentes.csv', encoding='latin1')
+
+    # Renombrar las columnas para evitar problemas con caracteres especiales
+    accidentes_data.columns = [
+        'Departamento',
+        'Codigo_Divipola_Departamento',
+        'Municipio',
+        'Codigo_Divipola_Municipio',
+        'Fecha_Accidente',
+        'Hora_Accidente',
+        'Cantidad_Vehiculos',
+        'Cantidad_Personas',
+        'Gravedad'
+    ]
+
+    print("Columnas del DataFrame:", accidentes_data.columns.tolist())
+
+    # Iterar sobre el DataFrame usando el índice
+    for index, row in accidentes_data.iterrows():
+        try:
+            # Generar row key basado en fecha, hora y ubicación
+            row_key = f"{row['Codigo_Divipola_Departamento']}_{row['Codigo_Divipola_Municipio']}_{row['Fecha_Accidente']}_{index}".encode('utf-8')
+
+            # Organizar los datos en familias de columnas
+            data = {
+                b'ubicacion:departamento': str(row['Departamento']).encode('utf-8'),
+                b'ubicacion:cod_departamento': str(row['Codigo_Divipola_Departamento']).encode('utf-8'),
+                b'ubicacion:municipio': str(row['Municipio']).encode('utf-8'),
+                b'ubicacion:cod_municipio': str(row['Codigo_Divipola_Municipio']).encode('utf-8'),
+
+                b'detalles:fecha': str(row['Fecha_Accidente']).encode('utf-8'),
+                b'detalles:hora': str(row['Hora_Accidente']).encode('utf-8'),
+                b'detalles:gravedad': str(row['Gravedad']).encode('utf-8'),
+
+                b'vehiculos:cantidad': str(row['Cantidad_Vehiculos']).encode('utf-8'),
+                b'personas:cantidad': str(row['Cantidad_Personas']).encode('utf-8')
+            }
+
+            table.put(row_key, data)
+
+        except Exception as e:
+            print(f"Error procesando fila {index}: {str(e)}")
+            continue
+
+    print("Datos cargados exitosamente")
+
+    # 4. Análisis de Datos
+
+    # 4.1 Accidentes por departamento
+    print("\n=== Total de accidentes por departamento ===")
+    dept_stats = {}
+    for key, data in table.scan():
+        dept = data[b'ubicacion:departamento'].decode('utf-8')
+        dept_stats[dept] = dept_stats.get(dept, 0) + 1
+
+    for dept, total in sorted(dept_stats.items(), key=lambda x: x[1], reverse=True)[:5]:
+        print(f"{dept}: {total} accidentes")
+
+    # 4.2 Cantidad de vehículos por gravedad
+    print("\n=== Vehículos involucrados por nivel de gravedad ===")
+    gravedad_stats = {}
+    for key, data in table.scan():
+        gravedad = data[b'detalles:gravedad'].decode('utf-8')
+        vehiculos = int(data[b'vehiculos:cantidad'].decode('utf-8'))
+        gravedad_stats[gravedad] = gravedad_stats.get(gravedad, 0) + vehiculos
+
+    for gravedad, vehiculos in sorted(gravedad_stats.items(), key=lambda x: x[1], reverse=True):
+        print(f"{gravedad}: {vehiculos} vehículos")
+
+    # 4.3 Accidentes por año
+    print("\n=== Accidentes por año ===")
+    year_stats = {}
+    for key, data in table.scan():
+        fecha = data[b'detalles:fecha'].decode('utf-8')
+        anio = datetime.strptime(fecha, '%Y-%m-%d').year
+        year_stats[anio] = year_stats.get(anio, 0) + 1
+
+    for anio in sorted(year_stats.keys()):
+        print(f"{anio}: {year_stats[anio]} accidentes")
+
+    # 4.4 Top 5 municipios con más accidentes
+    print("\n=== Top 5 municipios con más accidentes ===")
+    muni_stats = {}
+    for key, data in table.scan():
+        muni_key = f"{data[b'ubicacion:departamento'].decode('utf-8')} - {data[b'ubicacion:municipio'].decode('utf-8')}"
+        muni_stats[muni_key] = muni_stats.get(muni_key, 0) + 1
+
+    for muni, total in sorted(muni_stats.items(), key=lambda x: x[1], reverse=True)[:5]:
+        print(f"{muni}: {total} accidentes")
+
+except Exception as e:
+    print(f"Error: {str(e)}")
+finally:
+    # Cerrar la conexión
+    connection.close()
