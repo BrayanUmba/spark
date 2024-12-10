@@ -158,35 +158,3 @@ table.put(put);
 
 > 💡 **Nota**: Este es un documento vivo. ¡Siéntete libre de contribuir y mejorarlo!
 
-
-
-gitGraph
-    commit
-    branch develop
-    checkout develop
-    commit
-    branch feature/nueva-funcionalidad
-    checkout feature/nueva-funcionalidad
-    commit
-    commit
-    checkout develop
-    merge feature/nueva-funcionalidad
-    branch quality/certificacion
-    checkout quality/certificacion
-    commit
-    checkout develop
-    merge quality/certificacion
-    branch release/1.0.0
-    checkout release/1.0.0
-    commit
-    checkout main
-    merge release/1.0.0 tag:"v1.0.0"
-    checkout develop
-    merge release/1.0.0
-    branch hotfix/1.0.1
-    checkout hotfix/1.0.1
-    commit
-    checkout main
-    merge hotfix/1.0.1 tag:"v1.0.1"
-    checkout develop
-    merge hotfix/1.0.1
